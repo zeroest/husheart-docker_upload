@@ -1,0 +1,13 @@
+
+version: '3.4'
+
+services:
+  nginx:
+    container_name: nt
+    image: husheart/nginx_upload:test
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/usr/local/nginx
+
+
