@@ -1,0 +1,67 @@
+
+server {
+        listen 9004 ssl;
+
+        ssl_certificate         /home/ubuntu/ssl_key/dowhatconcierge.com/STAR.dowhatconcierge.com_crt.pem;
+        ssl_certificate_key     /home/ubuntu/ssl_key/dowhatconcierge.com/STAR.dowhatconcierge.com_key.pem;
+
+        server_name dfslga.dowhatconcierge.com;
+
+
+        location /test {
+                return 200 'test';
+        }
+
+        location /upload/progress {
+
+
+                add_header Access-Control-Allow-Origin *;
+                # add_header Access-Control-Allow-Origin "http://dowhatconcierge.com:8080/*, http://desktop-vnkkggi:17302/*";
+
+                add_header Access-Control-Allow-Headers "Authorization";
+
+                upload_pass /upload/complete;
+                # upload_pass /test;
+
+                upload_store /home/ubuntu/tmp 1;
+                upload_store_access user:rw group:rw all:r;
+
+                upload_state_store /home/ubuntu/tmp 1;
+                upload_resumable on;
+
+
+                upload_set_form_field $upload_field_name.name "$upload_file_name";
+                upload_set_form_field $upload_field_name.content_type "$upload_content_type";
+                upload_set_form_field $upload_field_name.path "$upload_tmp_path";
+
+                upload_aggregate_form_field "$upload_field_name.md5" "$upload_file_md5";
+                upload_aggregate_form_field "$upload_field_name.size" "$upload_file_size";
+
+                # custom form
+                # upload_pass_form_field "^submit$|^description$";
+                upload_pass_form_field "userId";
+                upload_pass_form_field "filePath";
+                upload_pass_form_field "useUniqueFileName";
+                upload_pass_form_field "useDateFolder";
+                upload_pass_form_field "targetType";
+                upload_pass_form_field "targetKey";
+
+                upload_cleanup 400 404 499 500-505;
+
+                access_log /home/ubuntu/nginx_upload/upload_acc.log;
+                error_log /home/ubuntu/nginx_upload/upload_err.log;
+
+        }
+
+        location /upload/complete {
+
+                proxy_pass http://upload_complete;
+
+        }
+
+}
+
+upstream upload_complete {
+        server 127.0.0.1:17304;
+}
+
