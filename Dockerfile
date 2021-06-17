@@ -17,6 +17,8 @@ RUN tar -xvzf nginx-1.20.0.tar.gz
 RUN wget -P /tmp https://github.com/vkholodkov/nginx-upload-module/archive/2.3.0.tar.gz
 RUN tar -zxvf /tmp/2.3.0.tar.gz -C /tmp
 
+RUN mkdir /root/data
+
 WORKDIR /root/nginx-1.20.0
 # RUN cd nginx-1.20.0
 
@@ -55,6 +57,8 @@ RUN ./configure \
 
 RUN make
 RUN make install
+
+RUN cat 
 
 CMD ["/usr/local/sbin/nginx", "-g", "daemon off;"]
 

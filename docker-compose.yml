@@ -9,5 +9,5 @@ services:
       - "80:80"
     volumes:
       - ./nginx:/usr/local/nginx
-
+      - ./file:/root/data
 
