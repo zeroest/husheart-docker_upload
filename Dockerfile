@@ -1,21 +1,27 @@
 
 FROM ubuntu:20.04
 
+ENV NGINX_VERSION=1.20.0
+ENV UPLOAD_MODULE_VERSION=2.3.0
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update
-RUN apt install -y \
+RUN apt-get update
+RUN apt-get install -y \
 make libperl-dev libpcre3 libpcre3-dev zlib1g \
 zlib1g-dev openssl libssl-dev libxml2-dev libxslt1-dev \
 libgd-dev libgeoip-dev google-perftools libgoogle-perftools-dev gcc g++ wget
 
 WORKDIR /root
 
-RUN wget https://nginx.org/download/nginx-1.20.0.tar.gz
-RUN tar -xvzf nginx-1.20.0.tar.gz
+RUN adduser --group nginx 
 
-RUN wget -P /tmp https://github.com/vkholodkov/nginx-upload-module/archive/2.3.0.tar.gz
-RUN tar -zxvf /tmp/2.3.0.tar.gz -C /tmp
+RUN wget https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz
+RUN tar -xvzf nginx-$NGINX_VERSION.tar.gz
+RUN rm nginx-$NGINX_VERSION.tar.gz
+
+RUN wget -P /tmp https://github.com/vkholodkov/nginx-upload-module/archive/$UPLOAD_MODULE_VERSION.tar.gz
+RUN tar -zxvf /tmp/$UPLOAD_MODULE_VERSION.tar.gz -C /tmp
+RUN rm /tmp/$UPLOAD_MODULE_VERSION.tar.gz
 
 RUN mkdir /root/data
 
@@ -53,7 +59,9 @@ RUN ./configure \
 --with-google_perftools_module \
 --with-cpp_test_module \
 --with-debug \
---add-module=/tmp/nginx-upload-module-2.3.0
+# --user=nginx \
+# --group=nginx \
+--add-module=/tmp/nginx-upload-module-$UPLOAD_MODULE_VERSION
 
 RUN make
 RUN make install

@@ -1,11 +1,11 @@
 
 server {
-        listen 9004 ssl;
+        listen 9004; # ssl;
 
-        ssl_certificate         /home/ubuntu/ssl_key/dowhatconcierge.com/STAR.dowhatconcierge.com_crt.pem;
-        ssl_certificate_key     /home/ubuntu/ssl_key/dowhatconcierge.com/STAR.dowhatconcierge.com_key.pem;
+        # ssl_certificate         /home/ubuntu/ssl_key/dowhatconcierge.com/STAR.dowhatconcierge.com_crt.pem;
+        # ssl_certificate_key     /home/ubuntu/ssl_key/dowhatconcierge.com/STAR.dowhatconcierge.com_key.pem;
 
-        server_name dfslga.dowhatconcierge.com;
+        # server_name dfslga.dowhatconcierge.com;
 
 
         location /test {
@@ -16,17 +16,15 @@ server {
 
 
                 add_header Access-Control-Allow-Origin *;
-                # add_header Access-Control-Allow-Origin "http://dowhatconcierge.com:8080/*, http://desktop-vnkkggi:17302/*";
 
-                add_header Access-Control-Allow-Headers "Authorization";
+                # add_header Access-Control-Allow-Headers "Authorization";
 
                 upload_pass /upload/complete;
-                # upload_pass /test;
 
-                upload_store /home/ubuntu/tmp 1;
+                upload_store /data 1;
                 upload_store_access user:rw group:rw all:r;
 
-                upload_state_store /home/ubuntu/tmp 1;
+                upload_state_store /data 1;
                 upload_resumable on;
 
 
@@ -48,8 +46,8 @@ server {
 
                 upload_cleanup 400 404 499 500-505;
 
-                access_log /home/ubuntu/nginx_upload/upload_acc.log;
-                error_log /home/ubuntu/nginx_upload/upload_err.log;
+                access_log /root/data/upload_acc.log;
+                error_log /root/data/upload_err.log;
 
         }
 

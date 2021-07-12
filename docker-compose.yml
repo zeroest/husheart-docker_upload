@@ -3,11 +3,12 @@ version: '3.4'
 
 services:
   nginx:
-    container_name: nt
-    image: husheart/nginx_upload:test
+    container_name: nf
+    image: nf
+    privileged: true
     ports:
-      - "80:80"
+      - "80:9004"
     volumes:
-      - ./nginx:/usr/local/nginx
-      - ./file:/root/data
+      - ./nginx:/usr/local/nginx:z
+      - ./file:/root/data:z
 
